@@ -50,7 +50,7 @@ if __name__ == '__main__':
     plt.scatter(x_ones[:,0], x_ones[:,1], c='blue', label='1', alpha=0.7)
     plt.xlabel('Feature 1')
     plt.ylabel('Feature 2')
-    plt.title('Linear Regression')
+    plt.title('Logistic Regression')
     plt.legend()
     plt.grid(True)
     plt.savefig('plot1.png')
