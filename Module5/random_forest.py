@@ -122,4 +122,4 @@ if __name__ == '__main__':
     # 8) View the list of features and their importance scores.
     # View a list of the features and their importance scores
     print("=== Features Importance ===")
-    list(zip(train[features], clf.feature_importances_))
+    print(list(zip(train[features], clf.feature_importances_)))
