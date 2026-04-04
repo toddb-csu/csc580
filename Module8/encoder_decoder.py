@@ -136,13 +136,10 @@ def predict_sequence(inf_enc, inf_dec, source, n_steps, cardinality):
     # encode
     state = inf_enc.predict(source, verbose=0)
     # start of sequence input
-    # target_seq = array([0.0 for _ in range(cardinality)]).reshape(1, 1)
     target_seq = np.zeros((1, 1, cardinality))
-    # target_seq[0, 0, 0] = 1.0
 
     # collect predictions
     output = list()
-    # output = []
 
     for t in range(n_steps):
         # predict next char
@@ -156,9 +153,6 @@ def predict_sequence(inf_enc, inf_dec, source, n_steps, cardinality):
 
         # update target sequence
         target_seq = y_hat
-        # token = int(np.argmax(y_hat_vec))
-        # target_seq = np.zeros((1, 1, cardinality), dtype=np.float32)
-        # target_seq[0, 0, token] = 1.0
 
     return array(output)
 
@@ -208,42 +202,29 @@ def generate_sequence(length, n_unique):
     return [randint(1, n_unique-1) for _ in range(length)]
 
 
-# Next, you need to create the corresponding output sequence given the source sequence. To keep things simple, select
-# the first n elements of the source sequence as the target sequence and reverse them.
-#
-# # define target sequence
-# target = source[:n_out]
-# target.reverse()
-#
-# You also need a version of the output sequence, shifted forward by one time step, that you can use as the mock target
-# generated so far, including the start-of-sequence value in the first time step. You can create this from the target
-# sequence directly.
-#
-# # create padded input target sequence
-# target_in = [0] + target[:-1]
-#
-# Now that all of the sequences have been defined, you can one-hot encode them, i.e., transform them into sequences of
-# binary vectors. You can use the Keras built in to_categorical() function to achieve this. You can put all of this into
-# a function named get_dataset() that will generate a specific number of sequences that we can use to train a model.
-
-
 # prepare data for the LSTM
 def get_dataset(n_in, n_out, cardinality, n_samples):
     x_1, x_2, y_1 = list(), list(), list()
-    # x_1, x_2, y_1 = [], [], []
     for _ in range(n_samples):
         # generate source sequence
         source = generate_sequence(n_in, cardinality)
-        # source = generate_sequence(n_in, cardinality - 1)
 
+        # Next, you need to create the corresponding output sequence given the source sequence. To keep things simple,
+        # select the first n elements of the source sequence as the target sequence and reverse them.
         # define target sequence
         target_seq = source[:n_out]
         target_seq.reverse()
-        # target = source[:n_out][::-1]
 
+        # You also need a version of the output sequence, shifted forward by one time step, that you can use as the mock
+        # target generated so far, including the start-of-sequence value in the first time step. You can create this
+        # from the target sequence directly.
         # create padded input target sequence
         target_in = [0] + target_seq[:-1]
 
+        # Now that all of the sequences have been defined, you can one-hot encode them, i.e., transform them into
+        # sequences of binary vectors. You can use the Keras built in to_categorical() function to achieve this. You can
+        # put all of this into a function named get_dataset() that will generate a specific number of sequences that we
+        # can use to train a model.
         # encode
         src_encoded = to_categorical([source], num_classes=cardinality)[0]
         tar_encoded = to_categorical([target_seq], num_classes=cardinality)[0]
@@ -262,7 +243,6 @@ def get_dataset(n_in, n_out, cardinality, n_samples):
 # the expected target sequence. The one_hot_decode() function will decode an encoded sequence.
 # decode a one hot encoded string
 def one_hot_decode(encoded_seq):
-    # return [int(argmax(vector)) for vector in encoded_seq]
     return [argmax(vector) for vector in encoded_seq]
 
 
